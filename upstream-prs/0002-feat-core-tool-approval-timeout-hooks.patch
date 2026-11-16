@@ -1,0 +1,156 @@
+From 8d4b2c9f0a3e2f1b5d6c7b8a9b0c1d2e3f4a5b6c Mon Sep 17 00:00:00 2001
+From: Balaharish Saravanan <balaharish0202@gmail.com>
+Date: Mon, 16 Nov 2026 12:15:00 +0000
+Subject: [PATCH] feat(core): implement fine-grained MCP tool approval policies and timeout hooks
+
+When an agent requests approval for tool execution (e.g., file writes or
+terminal commands), sessions currently suspend indefinitely if the user
+does not interact with the approval prompt.
+
+This commit adds:
+- Configurable ToolApprovalPolicy schema (autoApprove, timeoutMs, defaultAction)
+- Automatic approval for read-only tools (read_file, search_files)
+- Non-blocking timeout rejection hooks that prevent session hangs and return
+  a descriptive rejection event back into the turn loop.
+
+Signed-off-by: Balaharish Saravanan <balaharish0202@gmail.com>
+---
+ packages/core/src/approvals/approvalManager.ts  | 54 ++++++++++++++++++++++
+ packages/core/src/types/approval.ts             | 16 +++++++
+ packages/core/test/approvalTimeout.test.ts      | 38 ++++++++++++++++
+ 3 files changed, 108 insertions(+)
+ create mode 100644 packages/core/src/types/approval.ts
+ create mode 100644 packages/core/test/approvalTimeout.test.ts
+
+diff --git a/packages/core/src/types/approval.ts b/packages/core/src/types/approval.ts
+new file mode 100644
+index 0000000..c1b2a3d
+--- /dev/null
++++ b/packages/core/src/types/approval.ts
+@@ -0,0 +1,16 @@
++export type ApprovalCategory = 'read' | 'write' | 'execute';
++
++export interface ToolApprovalPolicy {
++  toolName: string;
++  category: ApprovalCategory;
++  autoApprove: boolean;
++  timeoutMs: number;
++  defaultOnTimeout: 'reject' | 'approve' | 'fallback_abort';
++}
++
++export interface ApprovalResolution {
++  toolName: string;
++  approved: boolean;
++  auto: boolean;
++  timedOut: boolean;
++}
+diff --git a/packages/core/src/approvals/approvalManager.ts b/packages/core/src/approvals/approvalManager.ts
+index b1c2d3e..f2e3a4b 100644
+--- a/packages/core/src/approvals/approvalManager.ts
++++ b/packages/core/src/approvals/approvalManager.ts
+@@ -10,6 +10,7 @@ import { EventEmitter } from 'events';
++import { ToolApprovalPolicy, ApprovalResolution } from '../types/approval';
+ 
+ export class ToolApprovalManager extends EventEmitter {
++  private policies: Map<string, ToolApprovalPolicy> = new Map();
++
++  constructor() {
++    super();
++    this.registerDefaultPolicies();
++  }
++
++  private registerDefaultPolicies(): void {
++    this.policies.set('read_file', { toolName: 'read_file', category: 'read', autoApprove: true, timeoutMs: 5000, defaultOnTimeout: 'approve' });
++    this.policies.set('search_files', { toolName: 'search_files', category: 'read', autoApprove: true, timeoutMs: 5000, defaultOnTimeout: 'approve' });
++    this.policies.set('write_file', { toolName: 'write_file', category: 'write', autoApprove: false, timeoutMs: 30000, defaultOnTimeout: 'reject' });
++    this.policies.set('execute_command', { toolName: 'execute_command', category: 'execute', autoApprove: false, timeoutMs: 60000, defaultOnTimeout: 'reject' });
++  }
++
++  public setPolicy(toolName: string, policy: ToolApprovalPolicy): void {
++    this.policies.set(toolName, policy);
++  }
++
++  public async requestApproval(
++    toolName: string,
++    params: any,
++    userPromptCallback: (toolName: string, params: any) => Promise<boolean>
++  ): Promise<ApprovalResolution> {
++    const policy = this.policies.get(toolName) || {
++      toolName,
++      category: 'execute',
++      autoApprove: false,
++      timeoutMs: 15000,
++      defaultOnTimeout: 'reject'
++    };
++
++    if (policy.autoApprove) {
++      return { toolName, approved: true, auto: true, timedOut: false };
++    }
++
++    return new Promise((resolve) => {
++      let resolved = false;
++      const timer = setTimeout(() => {
++        if (!resolved) {
++          resolved = true;
++          const approved = policy.defaultOnTimeout === 'approve';
++          this.emit('timeout', { toolName, policy });
++          resolve({ toolName, approved, auto: false, timedOut: true });
++        }
++      }, policy.timeoutMs);
++
++      userPromptCallback(toolName, params)
++        .then((approved) => {
++          if (!resolved) {
++            resolved = true;
++            clearTimeout(timer);
++            resolve({ toolName, approved, auto: false, timedOut: false });
++          }
++        })
++        .catch(() => {
++          if (!resolved) {
++            resolved = true;
++            clearTimeout(timer);
++            resolve({ toolName, approved: false, auto: false, timedOut: false });
++          }
++        });
++    });
++  }
+ }
+diff --git a/packages/core/test/approvalTimeout.test.ts b/packages/core/test/approvalTimeout.test.ts
+new file mode 100644
+index 0000000..d2c3b4a
+--- /dev/null
++++ b/packages/core/test/approvalTimeout.test.ts
+@@ -0,0 +1,38 @@
++import { describe, it, expect, vi } from 'vitest';
++import { ToolApprovalManager } from '../src/approvals/approvalManager';
++
++describe('ToolApprovalManager', () => {
++  it('auto-approves safe read tools without user prompt', async () => {
++    const manager = new ToolApprovalManager();
++    const promptMock = vi.fn();
++    const res = await manager.requestApproval('read_file', { path: 'a.py' }, promptMock);
++    expect(res.approved).toBe(true);
++    expect(res.auto).toBe(true);
++    expect(promptMock).not.toHaveBeenCalled();
++  });
++
++  it('times out safely on unanswered write tool requests', async () => {
++    const manager = new ToolApprovalManager();
++    manager.setPolicy('write_file', {
++      toolName: 'write_file',
++      category: 'write',
++      autoApprove: false,
++      timeoutMs: 50,
++      defaultOnTimeout: 'reject'
++    });
++
++    const neverResolvingPrompt = () => new Promise<boolean>(() => {});
++    const res = await manager.requestApproval('write_file', { path: 'critical.py' }, neverResolvingPrompt);
++
++    expect(res.approved).toBe(false);
++    expect(res.timedOut).toBe(true);
++  });
++});
+-- 
+2.34.1

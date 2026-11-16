@@ -122,6 +122,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "build": "node esbuild.js",
+    "doctor": "python3 scripts/doctor.py",
+    "demo": "python3 scripts/interactive_demo.py",
     "test": "node test/run_tests.js && node test/all_62_features.test.js"
   },
   "dependencies": {

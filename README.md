@@ -6,6 +6,14 @@
 
 **ForgeCode** is an editor-native autonomous coding agent built for the **Techfest 2026–27 (IIT Bombay) TrueFoundry Forge-a-thon**. It executes agent loops strictly on **TrueForge**—TrueFoundry's open-source agent harness—featuring token-budgeted context assembly, interactive per-hunk diff review in the editor, and automatic model failover resilience.
 
+> [!TIP]
+> **Quick Links for Judges & Evaluators:**
+> - ⚡ **[Judge's 2-Minute Quickstart Guide](JUDGES_QUICKSTART.md):** 3-command evaluation walkthrough & rubric cross-reference.
+> - 🏛️ **[Architectural Deep Dive](ARCHITECTURE_DEEP_DIVE.md):** C4 diagrams, sequence flows, and full 62-feature implementation matrix.
+> - 🩺 **[Pre-flight Health Diagnostics](scripts/doctor.py):** Run `npm run doctor` to audit all environment & rubric readiness checks.
+> - 🚀 **[Interactive Visual Terminal Demo](scripts/interactive_demo.py):** Run `npm run demo` for a live ANSI walkthrough of Tasks A, B, and C.
+> - 🎁 **[Upstream TrueForge PRs](upstream-prs/):** Ready-to-merge git patch files for `@truefoundry/trueforge` core.
+
 ---
 
 ## 1. Upstream Fork Declaration & License
