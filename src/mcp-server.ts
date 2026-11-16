@@ -24,7 +24,32 @@ process.stdin.on('data', async (chunk) => {
       const request = JSON.parse(line);
       const { id, method, params } = request;
 
-      if (method === 'tools/list') {
+      if (method === 'initialize') {
+        const response = {
+          jsonrpc: '2.0',
+          id,
+          result: {
+            protocolVersion: '2024-11-05',
+            capabilities: {
+              tools: {},
+            },
+            serverInfo: {
+              name: 'forgecode-editor-mcp',
+              version: '1.0.0',
+            },
+          },
+        };
+        process.stdout.write(JSON.stringify(response) + '\n');
+      } else if (method === 'ping') {
+        const response = {
+          jsonrpc: '2.0',
+          id,
+          result: {},
+        };
+        process.stdout.write(JSON.stringify(response) + '\n');
+      } else if (method === 'notifications/initialized') {
+        // Notification, no reply expected
+      } else if (method === 'tools/list') {
         const response = {
           jsonrpc: '2.0',
           id,

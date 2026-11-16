@@ -199,6 +199,26 @@ async function runAll() {
     assert(res.content.includes('1 |'));
   });
 
+  await asyncTest('Standalone MCP Server: Responds to JSON-RPC 2.0 initialize & tools/list over stdio', async () => {
+    const mcpScript = path.join(__dirname, '..', 'dist', 'mcp-server.js');
+    const child = require('child_process').spawn('node', [mcpScript], {
+      env: { ...process.env, FORGECODE_WORKSPACE: flaskEvalDir }
+    });
+
+    let stdoutData = '';
+    child.stdout.on('data', (d) => { stdoutData += d.toString(); });
+
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: 101, method: 'initialize', params: {} }) + '\n');
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: 102, method: 'tools/list' }) + '\n');
+    child.stdin.end();
+
+    await new Promise((resolve) => child.on('close', resolve));
+
+    assert(stdoutData.includes('"protocolVersion":"2024-11-05"'));
+    assert(stdoutData.includes('"workspace_search"'));
+    assert(stdoutData.includes('"propose_hunk_edits"'));
+  });
+
   console.log('\n[5/5] Testing ResilienceManager Failover & Zero-Corruption (Criterion B3)...');
   const { ResilienceManager, TrueForgeClient } = require('../dist/extension');
   const tfClient = new TrueForgeClient({

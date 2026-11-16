@@ -372,15 +372,17 @@ def test_config_command(runner):
     const docPath = path.join(evalDir, 'docs/cli.rst');
     const docOriginal = fs.existsSync(docPath) ? fs.readFileSync(docPath, 'utf8') : '';
 
-    const docSnippet = `
-Configuration Inspection
-------------------------
-
-To print the loaded application's configuration as JSON with sensitive keys
-(containing ``SECRET``, ``PASSWORD``, ``TOKEN``, or ``KEY``) masked as ``"***"``::
-
-    $ flask config
-`;
+    const docSnippet = [
+      '',
+      'Configuration Inspection',
+      '------------------------',
+      '',
+      "To print the loaded application's configuration as JSON with sensitive keys",
+      '(containing ``SECRET``, ``PASSWORD``, ``TOKEN``, or ``KEY``) masked as ``"***"``::',
+      '',
+      '    $ flask config',
+      ''
+    ].join('\n');
 
     let docModified = docOriginal;
     if (!docModified.includes('Configuration Inspection')) {
