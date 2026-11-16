@@ -22,6 +22,11 @@ import { SelfHealingEngine } from './features/SelfHealingEngine';
 import { EnterpriseMonorepoEngine } from './features/EnterpriseMonorepoEngine';
 import { SecurityPrivacyEngine } from './features/SecurityPrivacyEngine';
 import { TrueForgeUpstreamEngine } from './features/TrueForgeUpstreamEngine';
+import { NexusCoordinator } from './nexus/NexusCoordinator';
+import { SwarmConsensusEngine } from './nexus/SwarmConsensusEngine';
+import { ChaosFuzzingEngine } from './nexus/ChaosFuzzingEngine';
+import { CodeRadarVisualizer } from './nexus/CodeRadarVisualizer';
+import { SpeculativeHologramEngine } from './nexus/SpeculativeHologramEngine';
 
 let statusBarItem: vscode.StatusBarItem;
 
@@ -167,5 +172,10 @@ export {
   EnterpriseMonorepoEngine,
   SecurityPrivacyEngine,
   TrueForgeUpstreamEngine,
+  NexusCoordinator,
+  SwarmConsensusEngine,
+  ChaosFuzzingEngine,
+  CodeRadarVisualizer,
+  SpeculativeHologramEngine,
 };
 

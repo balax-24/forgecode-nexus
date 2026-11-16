@@ -113,8 +113,8 @@ def main():
 
     # 8. Automated Feature & Subsystem Test Suite
     test_ok, test_out = check_cmd("npm test")
-    tests_passed = test_ok and "Results: 9/9 Tests Passed" in test_out and "Total Test Results: 63 Passed" in test_out
-    log_check("Comprehensive Test Suites (Subsystems & 62 Features)", tests_passed, "Subsystem Tests: 9/9 Passed (100%)\n62-Feature Engine Tests: 63/63 Passed (100%)")
+    tests_passed = test_ok and "Results: 9/9 Tests Passed" in test_out and "Total Test Results: 63 Passed" in test_out and "Nexus Test Results: 7 Passed" in test_out
+    log_check("Comprehensive Test Suites (Subsystems, 62 Features & Nexus)", tests_passed, "Subsystem Tests: 9/9 Passed (100%)\n62-Feature Engine Tests: 63/63 Passed (100%)\nNexus Frontier Tests: 7/7 Passed (100%)")
     all_passed &= tests_passed
 
     # 9. Evaluation Tasks Pre-flight (pallets/flask Tasks A, B, C)
