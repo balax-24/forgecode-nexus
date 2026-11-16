@@ -1,0 +1,32 @@
+# TrueForge Harness Configuration Example
+# Copy this file to trueforge.config.yaml or set corresponding environment variables
+server:
+  port: 8790
+  host: "127.0.0.1"
+  standalone: true # SQLite storage, no external Redis/Postgres required
+
+models:
+  # Primary Model (Active for normal runs)
+  primary:
+    provider: "openai-compatible" # Can be Ollama, vLLM, OpenAI, TrueFoundry Gateway, Gemini, Anthropic
+    base_url: "https://api.openai.com/v1" # Or local: "http://127.0.0.1:11434/v1"
+    model_name: "gpt-4o-mini" # Or "qwen2.5-coder:7b", "gemini-2.5-flash"
+    api_key: "${OPENAI_API_KEY}" # Stored as environment variable; never committed
+    timeout_seconds: 30
+    max_retries: 2
+
+  # Fallback Model (Automatically engages if primary is unreachable or errors - Task C)
+  fallback:
+    provider: "openai-compatible"
+    base_url: "http://127.0.0.1:11434/v1" # Local Ollama or alternative gateway
+    model_name: "qwen2.5-coder:7b"
+    api_key: "not-needed-for-local"
+    timeout_seconds: 45
+    max_retries: 3
+
+# Resiliency & Fallback Policy
+resilience:
+  auto_failover: true
+  circuit_breaker_error_threshold: 2
+  reset_timeout_seconds: 60
+  clean_workspace_on_abort: true

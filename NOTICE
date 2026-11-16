@@ -1,0 +1,11 @@
+ForgeCode: Autonomous Coding Agent for Visual Studio Code
+Copyright 2024-2026 Cline Authors & ForgeCode Contributors
+
+This product includes software developed by the Cline Project (https://github.com/cline/cline)
+and modified for the TrueFoundry Forge-a-thon (Techfest, IIT Bombay).
+
+Fork Information:
+- Upstream: https://github.com/cline/cline
+- Starting Commit: e52cb8b4f174c3eef5dfd5c4323c9ce0534267bb
+- Architecture Modifications: Upstream proprietary LLM execution loop purged; replaced 100%
+  with TrueForge Agent Harness (Sessions, Turns, SSE Streaming) and in-extension MCP Server.

@@ -1,0 +1,134 @@
+{
+  "name": "forgecode",
+  "displayName": "ForgeCode",
+  "description": "TrueForge-powered autonomous coding agent for VS Code with token-budgeted context assembly, per-hunk diff review, and zero-corruption resilience",
+  "version": "1.0.0",
+  "publisher": "forge-a-thon",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/balaharish0202/forgecode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Programming Languages",
+    "Machine Learning",
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "forgecode.inlineEdit",
+        "title": "ForgeCode: Inline Edit Selection",
+        "category": "ForgeCode"
+      },
+      {
+        "command": "forgecode.openPanel",
+        "title": "ForgeCode: Open Autonomous Agent Panel",
+        "category": "ForgeCode"
+      },
+      {
+        "command": "forgecode.acceptHunk",
+        "title": "ForgeCode: Accept Diff Hunk",
+        "category": "ForgeCode"
+      },
+      {
+        "command": "forgecode.rejectHunk",
+        "title": "ForgeCode: Reject Diff Hunk",
+        "category": "ForgeCode"
+      },
+      {
+        "command": "forgecode.undoLastApply",
+        "title": "ForgeCode: Undo Last Applied Edit",
+        "category": "ForgeCode"
+      },
+      {
+        "command": "forgecode.showSessionInspector",
+        "title": "ForgeCode: Show TrueForge Session Inspector",
+        "category": "ForgeCode"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "forgecode.inlineEdit",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i",
+        "when": "editorHasSelection"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "forgecode-sidebar",
+          "title": "ForgeCode Agent",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "forgecode-sidebar": [
+        {
+          "type": "webview",
+          "id": "forgecode.agentView",
+          "name": "Autonomous Agent"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ForgeCode Configuration",
+      "properties": {
+        "forgecode.trueforgeUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8790",
+          "description": "Base URL of the local TrueForge agent harness server"
+        },
+        "forgecode.primaryModel": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "description": "Primary model configured in TrueForge"
+        },
+        "forgecode.fallbackModel": {
+          "type": "string",
+          "default": "qwen2.5-coder:7b",
+          "description": "Secondary fallback model for automatic failover resilience"
+        },
+        "forgecode.contextTokenBudget": {
+          "type": "number",
+          "default": 8000,
+          "description": "Maximum token budget allocated for workspace context assembly"
+        },
+        "forgecode.autoFallbackEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically failover to secondary model when primary endpoint fails"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build": "node esbuild.js",
+    "test": "node test/run_tests.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@truefoundry/trueforge-sdk": "^0.185.0",
+    "diff": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/diff": "^5.2.0",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,13 @@
+.vscode/**
+.vscode-test/**
+src/**
+test/**
+scripts/**
+flask-eval/**
+node_modules/**
+*.pdf
+*.txt
+.git/**
+.gitignore
+esbuild.js
+tsconfig.json
