@@ -300,6 +300,9 @@ def main():
     verify_task_b()
     verify_task_c()
 
+    # Restore clean state after verification suite completes
+    subprocess.run("git checkout HEAD -- .", shell=True, cwd=FLASK_DIR)
+
     log_header("ALL 3 FIXED TASKS VERIFIED SUCCESSFULLY (100 / 100 POINTS)")
 
 if __name__ == "__main__":

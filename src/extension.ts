@@ -13,6 +13,15 @@ import { ResilienceManager } from './ResilienceManager';
 import { InlineEditController } from './InlineEditController';
 import { SidebarProvider } from './SidebarProvider';
 import { DiffManager } from './DiffManager';
+import { FeatureRegistry } from './features/FeatureRegistry';
+import { AdvancedContextEngine } from './features/AdvancedContextEngine';
+import { DiffSafetyEngine } from './features/DiffSafetyEngine';
+import { MultiAgentEngine } from './features/MultiAgentEngine';
+import { DevExperienceEngine } from './features/DevExperienceEngine';
+import { SelfHealingEngine } from './features/SelfHealingEngine';
+import { EnterpriseMonorepoEngine } from './features/EnterpriseMonorepoEngine';
+import { SecurityPrivacyEngine } from './features/SecurityPrivacyEngine';
+import { TrueForgeUpstreamEngine } from './features/TrueForgeUpstreamEngine';
 
 let statusBarItem: vscode.StatusBarItem;
 
@@ -120,6 +129,18 @@ export function activate(context: vscode.ExtensionContext) {
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 
+  // Initialize Feature Registry (62 Production Features)
+  const featureRegistry = FeatureRegistry.getInstance(workspaceRoot);
+
+  // Command: forgecode.showFeatureCatalog
+  context.subscriptions.push(
+    vscode.commands.registerCommand('forgecode.showFeatureCatalog', () => {
+      const count = featureRegistry.getFeatureCount();
+      vscode.window.showInformationMessage(`ForgeCode Active Features: ${count}/62 across 8 categories enabled.`);
+    })
+  );
+
+  console.log(`[ForgeCode] Loaded ${featureRegistry.getFeatureCount()} features into registry.`);
   console.log('[ForgeCode] Extension activated successfully.');
 }
 
@@ -137,5 +158,14 @@ export {
   InlineEditController,
   SidebarProvider,
   DiffManager,
+  FeatureRegistry,
+  AdvancedContextEngine,
+  DiffSafetyEngine,
+  MultiAgentEngine,
+  DevExperienceEngine,
+  SelfHealingEngine,
+  EnterpriseMonorepoEngine,
+  SecurityPrivacyEngine,
+  TrueForgeUpstreamEngine,
 };
 

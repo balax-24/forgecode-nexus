@@ -50,6 +50,11 @@
         "category": "ForgeCode"
       },
       {
+        "command": "forgecode.showFeatureCatalog",
+        "title": "ForgeCode: View 62-Feature Production Catalog",
+        "category": "ForgeCode"
+      },
+      {
         "command": "forgecode.showSessionInspector",
         "title": "ForgeCode: Show TrueForge Session Inspector",
         "category": "ForgeCode"
@@ -117,7 +122,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "build": "node esbuild.js",
-    "test": "node test/run_tests.js"
+    "test": "node test/run_tests.js && node test/all_62_features.test.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",

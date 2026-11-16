@@ -214,7 +214,7 @@ async function runAll() {
   await asyncTest('ResilienceManager intercepts unreachable primary and fails over with clean workspace', async () => {
     // Ensure clean git state before resilience verification
     try {
-      execSync('git checkout -- .', { cwd: flaskEvalDir });
+      execSync('git checkout HEAD -- .', { cwd: flaskEvalDir });
     } catch (e) {}
 
     const isCleanBefore = resilience.verifyWorkspaceClean();
