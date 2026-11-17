@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ForgeCode Nexus — Autonomous Agent Studio</title>
   <meta name="description" content="TrueForge-powered autonomous coding agent studio featuring 62 production features, neural code radar, 3-way diff reviews, swarm consensus, and chaos fuzzing.">
+  <link rel="icon" type="image/svg+xml" href="/media/icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -807,6 +808,128 @@
       color: var(--accent-emerald);
       font-weight: 600;
     }
+  
+    /* Command Palette Modal (Cmd+K) */
+    .palette-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 10, 0.75);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 15vh;
+    }
+    .palette-backdrop.active {
+      display: flex;
+    }
+    .palette-modal {
+      width: 580px;
+      background: #0d121c;
+      border: 1px solid rgba(90, 185, 252, 0.3);
+      border-radius: 12px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 32px rgba(56, 189, 248, 0.15);
+      overflow: hidden;
+      animation: paletteIn 0.15s ease-out;
+    }
+    @keyframes paletteIn {
+      from { opacity: 0; transform: scale(0.96) translateY(-8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .palette-search-box {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      gap: 12px;
+    }
+    .palette-search-box svg { stroke: var(--accent-cyan); }
+    .palette-search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: #fff;
+    }
+    .palette-esc {
+      font-family: var(--font-code);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+    .palette-results {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .palette-item {
+      padding: 10px 14px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.1s ease;
+    }
+    .palette-item:hover, .palette-item.selected {
+      background: rgba(90, 185, 252, 0.12);
+      color: #fff;
+    }
+    .palette-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .palette-item-icon { font-size: 14px; }
+    .palette-item-kbd {
+      font-family: var(--font-code);
+      font-size: 10px;
+      color: var(--text-faint);
+    }
+
+    /* Floating Keyboard Shortcuts HUD */
+    .keyboard-hud {
+      position: fixed;
+      bottom: 16px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(12, 16, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 12px;
+      border-radius: 20px;
+      z-index: 90;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+    .hud-pill {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .kbd {
+      font-family: var(--font-code);
+      font-size: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
   </style>
 </head>
 <body>
@@ -814,8 +937,8 @@
   <!-- Top Navigation & Cockpit Bar -->
   <header class="top-bar">
     <div class="brand-group">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <div class="brand-icon" style="background:transparent;box-shadow:none;">
+        <img src="/media/icon.svg" alt="ForgeCode" style="width:32px;height:32px;border-radius:8px;display:block;filter:drop-shadow(0 0 10px rgba(56,189,248,0.5));">
       </div>
       <div class="brand-name">ForgeCode Nexus</div>
       <span class="brand-badge">v1.0.0-prod</span>
@@ -826,6 +949,12 @@
       <div class="status-chip" id="harnessChip">
         <div class="pulse-dot" id="harnessDot"></div>
         <span>TrueForge Harness: ONLINE (:8790)</span>
+      </div>
+
+      <div class="status-chip" id="streamingTicker" title="Real-time token generation telemetry">
+        <span style="color:var(--accent-cyan);font-weight:600;">⚡ 42.4 tk/s</span>
+        <span style="color:var(--text-faint);">|</span>
+        <span style="color:var(--text-muted);">28ms</span>
       </div>
 
       <div class="budget-bar">
@@ -1303,6 +1432,29 @@ Commands supported:
     </div>
 
   </main>
+
+  <!-- Command Palette Modal (Cmd+K / Ctrl+K) -->
+  <div class="palette-backdrop" id="paletteBackdrop" onclick="closePalette(event)">
+    <div class="palette-modal" onclick="event.stopPropagation()">
+      <div class="palette-search-box">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="paletteInput" placeholder="Type a command or navigate... (e.g. radar, doctor, test, eval, diff, chaos)" oninput="filterPalette()" onkeydown="handlePaletteKey(event)">
+        <span class="palette-esc">ESC</span>
+      </div>
+      <div class="palette-results" id="paletteResults"></div>
+    </div>
+  </div>
+
+  <!-- Floating Keyboard Shortcut HUD -->
+  <div class="keyboard-hud">
+    <div class="hud-pill"><span class="kbd">⌘K</span> Palette</div>
+    <div class="hud-pill"><span class="kbd">1-7</span> Tabs</div>
+    <div class="hud-pill"><span class="kbd">Y/N</span> Accept/Reject</div>
+    <div class="hud-pill"><span class="kbd">D</span> Doctor</div>
+    <div class="hud-pill"><span class="kbd">T</span> Tests</div>
+    <div class="hud-pill"><span class="kbd">M</span> Audio</div>
+  </div>
+
 
   <script>
     // --- Audio Synthesizer (Web Audio API) ---
@@ -1793,8 +1945,106 @@ Commands supported:
       });
     });
 
+    
+    // --- Command Palette Engine ---
+    const paletteActions = [
+      { id: 'radar', name: 'Open Neural Code Radar (Topology Graph)', icon: '🌐', kbd: '1', action: () => switchTab('radar') },
+      { id: 'diff', name: 'Open 3-Way Diff & Hunk Studio (Flask Task B)', icon: '⚡', kbd: '2', action: () => switchTab('diff') },
+      { id: 'swarm', name: 'Open Swarm Adversarial Arena (3-Agent Debate)', icon: '🛡️', kbd: '3', action: () => switchTab('swarm') },
+      { id: 'chaos', name: 'Open Chaos Fuzzing Crucible (14 Boundary Vectors)', icon: '🧪', kbd: '4', action: () => switchTab('chaos') },
+      { id: 'failover', name: 'Open TrueForge Failover Cockpit (Criterion B3)', icon: '🔄', kbd: '5', action: () => switchTab('failover') },
+      { id: 'terminal', name: 'Open Live Terminal Console', icon: '💻', kbd: '6', action: () => switchTab('terminal') },
+      { id: 'catalog', name: 'Browse 62-Feature Production Catalog', icon: '📑', kbd: '7', action: () => switchTab('catalog') },
+      { id: 'doctor', name: 'Run System Diagnostics ($ forge doctor)', icon: '🩺', kbd: 'D', action: () => runDoctorCli() },
+      { id: 'tests', name: 'Run All 80 Automated Tests ($ forge test)', icon: '🧪', kbd: 'T', action: () => runTestCli() },
+      { id: 'eval', name: 'Run Benchmark Evaluation ($ forge eval)', icon: '⚡', kbd: 'E', action: () => runEvalCli() },
+      { id: 'audio', name: 'Toggle Synthesized Audio Feedback', icon: '🔊', kbd: 'M', action: () => document.getElementById('btnAudioToggle').click() },
+      { id: 'sever', name: 'Simulate Network Sever (Trigger Failover)', icon: '⚡', kbd: 'S', action: () => toggleNetworkSever() }
+    ];
+
+    let selectedPaletteIndex = 0;
+
+    function openPalette() {
+      soundClick();
+      document.getElementById('paletteBackdrop').classList.add('active');
+      const input = document.getElementById('paletteInput');
+      input.value = '';
+      input.focus();
+      renderPaletteResults(paletteActions);
+    }
+
+    function closePalette(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('paletteBackdrop').classList.remove('active');
+    }
+
+    function renderPaletteResults(items) {
+      const results = document.getElementById('paletteResults');
+      results.innerHTML = '';
+      selectedPaletteIndex = 0;
+      items.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'palette-item' + (idx === 0 ? ' selected' : '');
+        div.onclick = () => {
+          closePalette();
+          item.action();
+        };
+        div.innerHTML = `
+          <div class="palette-item-left">
+            <span class="palette-item-icon">${item.icon}</span>
+            <span>${item.name}</span>
+          </div>
+          <span class="palette-item-kbd">${item.kbd}</span>
+        `;
+        results.appendChild(div);
+      });
+    }
+
+    function filterPalette() {
+      const q = document.getElementById('paletteInput').value.toLowerCase().trim();
+      const filtered = paletteActions.filter(a => a.name.toLowerCase().includes(q) || a.id.includes(q));
+      renderPaletteResults(filtered);
+    }
+
+    function handlePaletteKey(e) {
+      const items = document.querySelectorAll('.palette-item');
+      if (e.key === 'Escape') {
+        closePalette();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (items.length > 0) {
+          items[selectedPaletteIndex].classList.remove('selected');
+          selectedPaletteIndex = (selectedPaletteIndex + 1) % items.length;
+          items[selectedPaletteIndex].classList.add('selected');
+          items[selectedPaletteIndex].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (items.length > 0) {
+          items[selectedPaletteIndex].classList.remove('selected');
+          selectedPaletteIndex = (selectedPaletteIndex - 1 + items.length) % items.length;
+          items[selectedPaletteIndex].classList.add('selected');
+          items[selectedPaletteIndex].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (items.length > 0) {
+          items[selectedPaletteIndex].click();
+        }
+      }
+    }
+
     // Keyboard Shortcuts
     window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openPalette();
+        return;
+      }
+      if (document.getElementById('paletteBackdrop').classList.contains('active')) {
+        if (e.key === 'Escape') closePalette();
+        return;
+      }
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (e.key === '1') switchTab('radar');
       if (e.key === '2') switchTab('diff');
@@ -1817,5 +2067,4 @@ Commands supported:
   </script>
 </body>
 </html>
-"""
 
