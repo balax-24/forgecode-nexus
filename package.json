@@ -124,6 +124,7 @@
     "build": "node esbuild.js",
     "doctor": "python3 scripts/doctor.py",
     "demo": "python3 scripts/interactive_demo.py",
+    "serve": "python3 scripts/web_dashboard.py",
     "test": "node test/run_tests.js && node test/all_62_features.test.js && node test/nexus_unimaginable.test.js"
   },
   "dependencies": {
