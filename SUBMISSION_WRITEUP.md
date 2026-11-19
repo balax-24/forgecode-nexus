@@ -6,8 +6,11 @@
 ---
 
 ## 1. Team
+* **Team Name:** Internzz
+* **Techfest Team ID:** `TM-14B3C2A245A` (Competition ID: `TFF-EF1C44D4BBBB`)
 * **Lead Engineer:** Balaharish Saravanan
   * **Email:** balaharish0202@gmail.com
+  * **Phone:** +91 9150316901
   * **GitHub Handle:** [@balaharish0202](https://github.com/balaharish0202)
   * **Institution / College:** Registered Participant, Techfest IIT Bombay 2026–27
   * **Role:** Architecture, TrueForge Session Bridge, MCP Tool Server, Context Assembly Engine & Evaluation Verification.
