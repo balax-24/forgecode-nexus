@@ -230,7 +230,7 @@ The web studio features:
 
 ### Step 1: Install & Build
 ```bash
-git clone https://github.com/balaharish0202/forgecode.git
+git clone https://github.com/balax-24/forgecode-nexus.git
 cd forgecode
 npm install
 npm run build
