@@ -53,6 +53,8 @@ def main():
     print(f"\n{C.BOLD}{C.BLUE}┌{'─' * 70}┐")
     print(f"│  {C.WHITE}{C.BOLD}FORGECODE AUTONOMOUS AGENT — LIVE INTERACTIVE DEMONSTRATOR{C.BLUE}        │")
     print(f"│  {C.CYAN}TrueFoundry Forge-a-thon (Techfest IIT Bombay 2026–27){C.BLUE}             │")
+    print(f"│  {C.YELLOW}Team: Internzz  |  Team ID: TM-14B3C2A245A{C.BLUE}                          │")
+    print(f"│  {C.WHITE}Team Leader: Balaharish Saravanan (+91 9150316901){C.BLUE}                │")
     print(f"│  {C.MAGENTA}Evaluation Target: pallets/flask @ 3.1.3 (commit 22d92470){C.BLUE}          │")
     print(f"└{'─' * 70}┘{C.RESET}")
 
