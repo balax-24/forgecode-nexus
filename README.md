@@ -39,7 +39,7 @@
 In strict accordance with the competition guidelines (*"Building on Open Source"*):
 * **Team Name:** `Internzz`
 * **Techfest Team ID:** `TM-14B3C2A245A` (Competition ID: `TFF-EF1C44D4BBBB`)
-* **Lead Engineer:** Balaharish Saravanan (`balaharish0202@gmail.com`, Phone: `+91 9150316901`, GitHub: `@balaharish0202`)
+* **Lead Engineer:** Balaharish Saravanan (`balaharish0202@gmail.com`, Phone: `+91 9150316901`, GitHub: `@balax-24`)
 * **Declared Starting Fork:** [`cline`](https://github.com/cline/cline)
 * **Declared Commit SHA:** `e52cb8b4f174c3eef5dfd5c4323c9ce0534267bb`
 * **License & Attribution:** The upstream Apache License 2.0 is preserved in full in [`LICENSE`](LICENSE) and attributed in [`NOTICE`](NOTICE).
