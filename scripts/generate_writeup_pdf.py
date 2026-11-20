@@ -134,8 +134,8 @@ def build_pdf():
     # Section 1: Team
     elements.append(Paragraph("1. Team", h1_style))
     elements.append(Paragraph("<b>Team Name:</b> Internzz | <b>Techfest Team ID:</b> TM-14B3C2A245A | <b>Competition ID:</b> TFF-EF1C44D4BBBB", bullet_style))
-    elements.append(Paragraph("<b>Lead Engineer:</b> Balaharish Saravanan | <b>Email:</b> balaharish0202@gmail.com | <b>Phone:</b> +91 9150316901 | <b>GitHub:</b> @balaharish0202", bullet_style))
-    elements.append(Paragraph("<b>Affiliation:</b> Registered Contestant, Techfest 2026–27, IIT Bombay", bullet_style))
+    elements.append(Paragraph("<b>Lead Engineer:</b> Balaharish Saravanan | <b>Email:</b> balaharish0202@gmail.com | <b>Phone:</b> +91 9150316901 | <b>GitHub:</b> @balax-24", bullet_style))
+    elements.append(Paragraph("<b>Public Repository:</b> https://github.com/balax-24/forgecode-nexus | <b>Affiliation:</b> Techfest IIT Bombay", bullet_style))
     elements.append(Paragraph("<b>Responsibilities:</b> End-to-end architecture, TrueForge harness bridge, MCP tool server, token-budgeted context assembler, and verification suites.", bullet_style))
 
     # Section 2: Starting Point

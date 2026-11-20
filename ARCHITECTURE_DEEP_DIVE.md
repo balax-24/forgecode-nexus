@@ -1,6 +1,6 @@
 # ForgeCode — Architectural Deep Dive & Design Specifications
 **Competition:** Techfest 2026–27 (IIT Bombay) • TrueFoundry Forge-a-thon  
-**Lead Engineer:** Balaharish Saravanan ([@balaharish0202](https://github.com/balaharish0202))
+**Lead Engineer:** Balaharish Saravanan ([@balax-24](https://github.com/balax-24))
 
 ---
 

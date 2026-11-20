@@ -1,6 +1,6 @@
 # TrueForge Core Upstream Contributions
 **Techfest 2026–27 TrueFoundry Forge-a-thon (IIT Bombay)**  
-**Applicant:** Balaharish Saravanan ([@balaharish0202](https://github.com/balaharish0202))
+**Applicant:** Balaharish Saravanan ([@balax-24](https://github.com/balax-24))
 
 ---
 

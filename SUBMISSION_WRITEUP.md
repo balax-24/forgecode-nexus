@@ -11,7 +11,8 @@
 * **Lead Engineer:** Balaharish Saravanan
   * **Email:** balaharish0202@gmail.com
   * **Phone:** +91 9150316901
-  * **GitHub Handle:** [@balaharish0202](https://github.com/balaharish0202)
+  * **GitHub Handle:** [@balax-24](https://github.com/balax-24)
+  * **Public Repository:** [https://github.com/balax-24/forgecode-nexus](https://github.com/balax-24/forgecode-nexus)
   * **Institution / College:** Registered Participant, Techfest IIT Bombay 2026–27
   * **Role:** Architecture, TrueForge Session Bridge, MCP Tool Server, Context Assembly Engine & Evaluation Verification.
 
